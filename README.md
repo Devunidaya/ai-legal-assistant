@@ -1,6 +1,6 @@
 ⚔️ GenAI Legal Assistant for SMEs
 
-demo video: 
+demo video: https://drive.google.com/file/d/1kVuseljwLHHW9ibOW8r739__ec68zTLk/view?usp=sharing
 
 deployment: https://ai-legal-assistant-fv3iuhw7yncazbwychqh4t.streamlit.app/
 
