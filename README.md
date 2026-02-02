@@ -2,7 +2,7 @@
 
 demo video: 
 
-deployment: 
+deployment: https://ai-legal-assistant-fv3iuhw7yncazbwychqh4t.streamlit.app/
 
 
 A GenAI-powered legal intelligence platform designed to help Small and Medium Enterprises (SMEs) in India understand complex legal contracts, identify risks, and make informed decisions—without requiring legal expertise.
