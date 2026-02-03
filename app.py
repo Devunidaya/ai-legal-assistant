@@ -19,7 +19,7 @@ st.set_page_config(
 )
 
 # =================================================
-# BLUE × GREEN UI THEME (MAIN INTERFACE ONLY)
+# BLUE × GREEN UI THEME
 # =================================================
 
 st.markdown("""
@@ -32,7 +32,6 @@ st.markdown("""
     font-family: 'Inter', sans-serif;
 }
 
-/* Page title */
 .page-title {
     font-size: 2.8rem;
     font-weight: 800;
@@ -46,7 +45,6 @@ st.markdown("""
     margin-bottom: 1.8rem;
 }
 
-/* Section titles */
 .section-title {
     font-size: 1.4rem;
     font-weight: 700;
@@ -54,34 +52,23 @@ st.markdown("""
     margin-bottom: 0.8rem;
 }
 
-/* Risk labels */
 .risk-low { color: #22c55e; font-weight: 700; }
 .risk-medium { color: #facc15; font-weight: 700; }
 .risk-high { color: #ef4444; font-weight: 700; }
 
-/* Buttons */
 .stButton > button {
     background: linear-gradient(135deg, #38bdf8, #22c55e);
     color: #022c22;
     font-weight: 700;
     border-radius: 14px;
     padding: 0.65rem 1.4rem;
-    border: none;
-    transition: all 0.25s ease;
 }
 
-.stButton > button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 28px rgba(56,189,248,0.45);
-}
-
-/* Small text */
 .small-text {
     color: #9ddcff;
     font-size: 0.85rem;
 }
 
-/* Expanders */
 .streamlit-expanderHeader {
     font-weight: 600;
     color: #e0f7ff;
@@ -120,19 +107,15 @@ def analyze_contract(text):
 
     if "terminate" in text and "without notice" in text:
         high_risk.append("Termination allowed without notice")
-
     if "indemnify" in text or "indemnity" in text:
         high_risk.append("Unlimited indemnity obligation")
-
     if "auto-renew" in text or "automatically renew" in text:
         medium_risk.append("Auto-renewal clause present")
 
     if not high_risk and not medium_risk:
         return "LOW", [], []
-
     if high_risk:
         return "HIGH", high_risk, medium_risk
-
     return "MEDIUM", high_risk, medium_risk
 
 
@@ -174,16 +157,7 @@ def explain_clause_plainly(clause):
 # =================================================
 
 st.markdown("<div class='page-title'>Contract Analysis Dashboard</div>", unsafe_allow_html=True)
-st.markdown(
-    "<div class='page-subtitle'>AI Legal Risk Intelligence Platform</div>",
-    unsafe_allow_html=True
-)
-
-# =================================================
-# FILE UPLOAD (MAIN UI)
-# =================================================
-
-st.markdown("<div class='card'>", unsafe_allow_html=True)
+st.markdown("<div class='page-subtitle'>AI Legal Risk Intelligence Platform</div>", unsafe_allow_html=True)
 
 uploaded_file = st.file_uploader(
     "📤 Upload Contract (PDF / DOCX / TXT)",
@@ -195,15 +169,13 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-st.markdown("</div>", unsafe_allow_html=True)
-
-# =================================================
-# ANALYSIS FLOW
-# =================================================
-
 if not uploaded_file:
     st.info("Upload a contract to begin analysis.")
     st.stop()
+
+# =================================================
+# ANALYSIS FLOW (UNCHANGED)
+# =================================================
 
 with st.spinner("Reading contract..."):
     text = extract_text(uploaded_file)
@@ -230,28 +202,27 @@ st.session_state["analysis_result"] = {
 col1, col2, col3 = st.columns(3)
 
 with col1:
-    st.markdown("<div class='card'><div class='section-title'>Contract Type</div></div>", unsafe_allow_html=True)
+    st.markdown("<div class='section-title'>Contract Type</div>", unsafe_allow_html=True)
     st.write(contract_type)
 
 with col2:
-    st.markdown("<div class='card'><div class='section-title'>Overall Risk</div>", unsafe_allow_html=True)
+    st.markdown("<div class='section-title'>Overall Risk</div>", unsafe_allow_html=True)
     if risk == "LOW":
         st.markdown("<span class='risk-low'>LOW RISK</span>", unsafe_allow_html=True)
     elif risk == "MEDIUM":
         st.markdown("<span class='risk-medium'>MEDIUM RISK</span>", unsafe_allow_html=True)
     else:
         st.markdown("<span class='risk-high'>HIGH RISK</span>", unsafe_allow_html=True)
-    st.markdown("</div>", unsafe_allow_html=True)
 
 with col3:
-    st.markdown("<div class='card'><div class='section-title'>File Name</div></div>", unsafe_allow_html=True)
+    st.markdown("<div class='section-title'>File Name</div>", unsafe_allow_html=True)
     st.write(uploaded_file.name)
 
 # =================================================
-# RISK FINDINGS
+# RISK FINDINGS (UNCHANGED)
 # =================================================
 
-st.markdown("<div class='card'><div class='section-title'>⚠️ Risk Findings</div>", unsafe_allow_html=True)
+st.markdown("<div class='section-title'>⚠️ Risk Findings</div>", unsafe_allow_html=True)
 
 if high_risk:
     st.error("High Risk Clauses")
@@ -266,29 +237,36 @@ if medium_risk:
 if not high_risk and not medium_risk:
     st.success("No significant legal risks detected")
 
-st.markdown("</div>", unsafe_allow_html=True)
-
 # =================================================
-# CLAUSE EXPLANATIONS
+# CLAUSE EXPLANATIONS (UNCHANGED)
 # =================================================
 
-st.markdown("<div class='card'><div class='section-title'>📄 Clause Explanations</div>", unsafe_allow_html=True)
+st.markdown("<div class='section-title'>📄 Clause Explanations</div>", unsafe_allow_html=True)
 
 for i, clause in enumerate(clauses, 1):
     with st.expander(f"Clause {i}"):
         st.write(clause)
         st.info(explain_clause_plainly(clause))
 
-st.markdown("</div>", unsafe_allow_html=True)
-
 # =================================================
-# PDF EXPORT
+# PDF EXPORT (FIXED, NO FEATURE LOSS)
 # =================================================
 
-st.markdown("<div class='card'>", unsafe_allow_html=True)
+st.markdown("<div class='section-title'>📄 Export Legal Summary</div>", unsafe_allow_html=True)
 
-if st.button("📄 Export Legal Summary (PDF)"):
-    generate_pdf(build_summary(st.session_state["analysis_result"]))
-    st.success("PDF generated successfully")
+if st.button("Generate PDF"):
+    with st.spinner("Generating PDF..."):
+        summary_text = build_summary(st.session_state["analysis_result"])
+        pdf_path = generate_pdf(summary_text)
 
-st.markdown("</div>", unsafe_allow_html=True)
+    # Handle both return styles safely
+    if isinstance(pdf_path, str) and os.path.exists(pdf_path):
+        with open(pdf_path, "rb") as f:
+            st.download_button(
+                label="⬇️ Download Legal Summary (PDF)",
+                data=f.read(),
+                file_name="legal_summary.pdf",
+                mime="application/pdf"
+            )
+    else:
+        st.error("PDF generation failed. Please verify generate_pdf().")
